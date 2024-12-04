@@ -32,8 +32,7 @@ object BuildHelper {
     "UTF-8",
     "-feature",
     "-unchecked"
-  ) ++
-    Seq("-Xfatal-warnings")
+  )
 
   private val std2xOptions = Seq(
     "-language:higherKinds",
@@ -42,7 +41,8 @@ object BuildHelper {
     "-Yrangepos",
     "-Xlint:_,-missing-interpolator,-type-parameter-shadow",
     "-Ywarn-numeric-widen",
-    "-Ywarn-value-discard"
+    "-Ywarn-value-discard",
+    "-Xfatal-warnings"
   )
 
   private def optimizerOptions(optimize: Boolean) =
@@ -58,32 +58,6 @@ object BuildHelper {
       buildInfoKeys    := Seq[BuildInfoKey](organization, moduleName, name, version, scalaVersion, sbtVersion, isSnapshot),
       buildInfoPackage := packageName
     )
-
-  val dottySettings = Seq(
-    crossScalaVersions += ScalaDotty,
-    scalacOptions --= {
-      if (scalaVersion.value == ScalaDotty)
-        Seq("-Xfatal-warnings")
-      else
-        Seq("-Xprint:typer")
-    },
-    Compile / doc / sources  := {
-      val old = (Compile / doc / sources).value
-      if (scalaVersion.value == ScalaDotty) {
-        Nil
-      } else {
-        old
-      }
-    },
-    Test / parallelExecution := {
-      val old = (Test / parallelExecution).value
-      if (scalaVersion.value == ScalaDotty) {
-        false
-      } else {
-        old
-      }
-    }
-  )
 
   val scalaReflectSettings = Seq(
     libraryDependencies ++= Seq("dev.zio" %%% "izumi-reflect" % "1.0.0-M10")
@@ -206,7 +180,7 @@ object BuildHelper {
     resolvers +=
       "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
     name                     := s"$prjName",
-    crossScalaVersions       := Seq(Scala212, Scala213),
+    crossScalaVersions       := Seq(Scala212, Scala213, ScalaDotty),
     ThisBuild / scalaVersion := Scala213,
     scalacOptions            := stdOptions ++ extraOptions(scalaVersion.value, optimize = !isSnapshot.value),
     libraryDependencies ++= {
@@ -224,7 +198,7 @@ object BuildHelper {
       "com.github.liancheng" %% "organize-imports" % "0.6.0",
       "com.github.vovapolu"  %% "scaluzzi"         % "0.1.23"
     ),
-    Test / parallelExecution := true,
+    Test / parallelExecution := scalaVersion.value != ScalaDotty,
     incOptions ~= (_.withLogRecompileOnMacro(false)),
     autoAPIMappings          := true,
     unusedCompileDependenciesFilter -= moduleFilter("org.scala-js", "scalajs-library")
