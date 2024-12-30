@@ -58,12 +58,12 @@ addCommandAlias(
   "all zioConfigJVM/mimaReportBinaryIssues zioConfigTypesafeJVM/mimaReportBinaryIssues zioConfigDerivationJVM/mimaReportBinaryIssues zioConfigYamlJVM/mimaReportBinaryIssues zioConfigMagnoliaJVM/mimaReportBinaryIssues zioConfigAwsJVM/mimaReportBinaryIssues zioConfigZioAwsJVM/mimaReportBinaryIssues zioConfigXmlJVM/mimaReportBinaryIssues"
 )
 
-val awsVersion        = "1.12.777"
-val zioAwsVersion     = "7.28.29.4"
-val zioVersion        = "2.1.12"
+val awsVersion        = "1.12.780"
+val zioAwsVersion     = "7.28.29.11"
+val zioVersion        = "2.1.14"
 val magnoliaVersion   = "0.17.0"
-val refinedVersion    = "0.11.2"
-val pureconfigVersion = "0.17.7"
+val refinedVersion    = "0.11.3"
+val pureconfigVersion = "0.17.8"
 
 lazy val magnoliaDependencies =
   libraryDependencies ++= {
